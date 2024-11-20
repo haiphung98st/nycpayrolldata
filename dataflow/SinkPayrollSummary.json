@@ -1,5 +1,5 @@
 {
-	"name": "Sum TotalPaid",
+	"name": "SinkPayrollSummary",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -19,7 +19,15 @@
 					"name": "payrolldata2021"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "azuresql_nycpayrollsummary",
+						"type": "DatasetReference"
+					},
+					"name": "sinkafteragg"
+				}
+			],
 			"transformations": [
 				{
 					"name": "union2021and2020"
@@ -93,7 +101,23 @@
 				"fiscalyearfilter derive(TotalPaid = RegularGrossPaid + TotalOTPaid+TotalOtherPay) ~> TotalPaid",
 				"TotalPaid aggregate(groupBy(AgencyName,",
 				"          FiscalYear),",
-				"     TotalPaid = sum(TotalPaid)) ~> SumTotalPaid"
+				"     TotalPaid = sum(TotalPaid)) ~> SumTotalPaid",
+				"SumTotalPaid sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          FiscalYear as integer,",
+				"          AgencyName as string,",
+				"          TotalPaid as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkafteragg"
 			]
 		}
 	}

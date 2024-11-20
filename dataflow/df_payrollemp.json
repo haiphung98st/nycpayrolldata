@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "azuresql_nycpayrollempmd",
+						"referenceName": "datalake_EmpMaster",
 						"type": "DatasetReference"
 					},
 					"name": "payrollemp"
@@ -30,8 +30,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> payrollemp",
+				"     ignoreNoFilesFound: false) ~> payrollemp",
 				"payrollemp sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

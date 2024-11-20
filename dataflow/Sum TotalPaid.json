@@ -1,0 +1,100 @@
+{
+	"name": "Sum TotalPaid",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "azuresql_payrolldata2020",
+						"type": "DatasetReference"
+					},
+					"name": "payrolldata2020"
+				},
+				{
+					"dataset": {
+						"referenceName": "azuresql_payrolldata2021",
+						"type": "DatasetReference"
+					},
+					"name": "payrolldata2021"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "union2021and2020"
+				},
+				{
+					"name": "fiscalyearfilter"
+				},
+				{
+					"name": "TotalPaid"
+				},
+				{
+					"name": "SumTotalPaid"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     dataflow_param_fiscalyear as integer (2021)",
+				"}",
+				"source(output(",
+				"          FiscalYear as integer,",
+				"          PayrollNumber as integer,",
+				"          AgencyID as string,",
+				"          AgencyName as string,",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string,",
+				"          AgencyStartDate as date,",
+				"          WorkLocationBorough as string,",
+				"          TitleCode as string,",
+				"          TitleDescription as string,",
+				"          LeaveStatusasofJune30 as string,",
+				"          BaseSalary as double,",
+				"          PayBasis as string,",
+				"          RegularHours as double,",
+				"          RegularGrossPaid as double,",
+				"          OTHours as double,",
+				"          TotalOTPaid as double,",
+				"          TotalOtherPay as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> payrolldata2020",
+				"source(output(",
+				"          FiscalYear as integer,",
+				"          PayrollNumber as integer,",
+				"          AgencyCode as string,",
+				"          AgencyName as string,",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string,",
+				"          AgencyStartDate as date,",
+				"          WorkLocationBorough as string,",
+				"          TitleCode as string,",
+				"          TitleDescription as string,",
+				"          LeaveStatusasofJune30 as string,",
+				"          BaseSalary as double,",
+				"          PayBasis as string,",
+				"          RegularHours as double,",
+				"          RegularGrossPaid as double,",
+				"          OTHours as double,",
+				"          TotalOTPaid as double,",
+				"          TotalOtherPay as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> payrolldata2021",
+				"payrolldata2020, payrolldata2021 union(byName: true)~> union2021and2020",
+				"union2021and2020 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> fiscalyearfilter",
+				"fiscalyearfilter derive(TotalPaid = RegularGrossPaid + TotalOTPaid+TotalOtherPay) ~> TotalPaid",
+				"TotalPaid aggregate(groupBy(AgencyName,",
+				"          FiscalYear),",
+				"     TotalPaid = sum(TotalPaid)) ~> SumTotalPaid"
+			]
+		}
+	}
+}

@@ -26,6 +26,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "sinkafteragg"
+				},
+				{
+					"dataset": {
+						"referenceName": "dirstagingdataset",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdirstaging"
 				}
 			],
 			"transformations": [
@@ -117,7 +124,16 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkafteragg"
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkafteragg",
+				"SumTotalPaid sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1) ~> sinkdirstaging"
 			]
 		}
 	}

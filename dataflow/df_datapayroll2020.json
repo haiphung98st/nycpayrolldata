@@ -78,7 +78,28 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkdatapayrroll2020"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          FiscalYear,",
+				"          PayrollNumber,",
+				"          AgencyID,",
+				"          AgencyName,",
+				"          EmployeeID,",
+				"          LastName,",
+				"          FirstName,",
+				"          AgencyStartDate,",
+				"          WorkLocationBorough,",
+				"          TitleCode,",
+				"          TitleDescription,",
+				"          LeaveStatusasofJune30,",
+				"          BaseSalary,",
+				"          PayBasis,",
+				"          RegularHours,",
+				"          RegularGrossPaid,",
+				"          OTHours,",
+				"          TotalOTPaid,",
+				"          TotalOtherPay",
+				"     )) ~> sinkdatapayrroll2020"
 			]
 		}
 	}

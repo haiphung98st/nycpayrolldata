@@ -10,9 +10,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "payrolldata2020"
-				},
-				{
-					"name": "payrolldata2021"
 				}
 			],
 			"sinks": [
@@ -50,8 +47,6 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> payrolldata2020",
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> payrolldata2021",
 				"payrolldata2020 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

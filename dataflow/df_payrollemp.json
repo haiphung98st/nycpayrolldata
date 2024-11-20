@@ -1,0 +1,53 @@
+{
+	"name": "df_payrollemp",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "azuresql_nycpayrollempmd",
+						"type": "DatasetReference"
+					},
+					"name": "payrollemp"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "azuresql_nycpayrollempmd",
+						"type": "DatasetReference"
+					},
+					"name": "sinkpayrollemp"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> payrollemp",
+				"payrollemp sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkpayrollemp"
+			]
+		}
+	}
+}
